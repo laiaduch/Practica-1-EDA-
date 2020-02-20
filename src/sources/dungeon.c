@@ -30,6 +30,7 @@ void set_position(Position* position, int row, int column) {
 void set_starting_position(Dungeon *dungeon, int row, int column) {
     dungeon->initial_position.row = row;
     dungeon->initial_position.column = column;
+    mark_visited(get_room_at(dungeon, row, column));
 }
 
 /**
@@ -103,7 +104,9 @@ int is_valid_position(Position position) {
 Room *get_room_at(Dungeon *dungeon, int row, int column) {
     if (is_valid_coordinates(row, column)) {
         return &dungeon->map[row][column];
-    } else return NULL;
+    } else {
+        return NULL;
+    }
 }
 
 /**
@@ -131,13 +134,11 @@ Room* get_room_at_position(Dungeon *dungeon, Position position) {
  * Post:
  */
 int init_dungeon(Dungeon *dungeon) {
-    dungeon->initial_position.row = 0;
-    dungeon->initial_position.column = 0;
-
     for(int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLUMNS; j++) {
             init_room(&dungeon->map[i][j]);
         }
     }
+    set_starting_position(dungeon, 0, 0);
     return SUCCESS;
 }

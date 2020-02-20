@@ -47,7 +47,6 @@ void enable_room(Room* room) {
 void disable_room(Room* room) {
     room->is_enabled = FALSE;
 }
-
 /**
  * Checks if the room is enabled or disabled.
  *
@@ -57,7 +56,7 @@ void disable_room(Room* room) {
  * Pre:
  * Post:
  */
-int is_enabled(Room* room) {
+int is_enabled(Room* room){
     return room->is_enabled;
 }
 

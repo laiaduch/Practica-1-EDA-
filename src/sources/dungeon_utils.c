@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "../headers/dungeon_utils.h"
 
 void draw_top(FILE *fd, Room *room) {
@@ -182,7 +183,68 @@ void init_two_rooms_dungeon(Dungeon *dungeon) {
  * Post:
  */
 int read_room_data(Dungeon* dungeon, int row, int column, const char* data) {
-    return ERROR;
+    int i = 0;
+    while (data[i] == '\0') {
+        Room* room;
+        room = get_room_at(dungeon, row, column);
+        switch(data[i]) {
+            case 'I':
+                set_starting_position(dungeon, row, column);
+                break;
+            case 'N': // 0
+                add_door(get_wall(room, NORTH));
+                open_door(get_wall(room, NORTH));
+                break;
+            case 'S': // 2
+                add_door(get_wall(room, SOUTH));
+                open_door(get_wall(room, SOUTH));
+                break;
+            case 'E': // 1
+                add_door(get_wall(room, EAST));
+                open_door(get_wall(room, EAST));
+                break;
+            case 'W': // 3
+                add_door(get_wall(room, WEST));
+                open_door(get_wall(room, WEST));
+                break;
+            case 'X':
+                switch(data[i - 1]) {
+                    case 'N':
+                        add_exit_door(get_wall(room, NORTH));
+                        break;
+                    case 'S':
+                        add_exit_door(get_wall(room, SOUTH));
+                        break;
+                    case 'E':
+                        add_exit_door(get_wall(room, EAST));
+                        break;
+                    case 'W':
+                        add_exit_door(get_wall(room, WEST));
+                        break;
+                }
+                break;
+
+            case 'C':
+                switch(data[i - 1]) {
+                    case 'N':
+                        close_door(get_wall(room, NORTH));
+                        break;
+                    case 'S':
+                        close_door(get_wall(room, SOUTH));
+                        break;
+                    case 'E':
+                        close_door(get_wall(room, EAST));
+                        break;
+                    case 'W':
+                        close_door(get_wall(room, WEST));
+                        break;
+                }
+                break;
+            default:
+                return INVALID_ROOM_DATA;
+        }
+    }
+    return SUCCESS;
 }
 
 /**
@@ -196,7 +258,38 @@ int read_room_data(Dungeon* dungeon, int row, int column, const char* data) {
  * Post:
  */
 int read_room_line(Dungeon* dungeon, FILE* fd) {
-    return ERROR;
+    char buff[MAX_LOADING_BUFFER];
+    init_dungeon(dungeon);
+    int i = 0;
+    while (fgets(buff, MAX_ROOM_DATA, fd) != NULL) {
+        if (i == 0) {
+            char* delim = "x";
+            char* ptrFirstLine = strtok(buff, delim);
+            if (!strtol(ptrFirstLine[0], (char **)NULL, 10)) {
+                return INVALID_ROOM_LINE;
+            }
+            if (!strtol(ptrFirstLine[1], (char **)NULL, 10)) {
+                return INVALID_ROOM_LINE;
+            }
+            if (!is_valid_coordinates(ptrFirstLine[0], ptrFirstLine[1])) {
+                return INVALID_ROOM_LINE;
+            }
+        } else {
+            char* delim = " ";
+            char* ptrLines = strtok(buff, delim);
+            if (!strtol(ptrLines[0], (char **)NULL, 10)) {
+                return INVALID_ROOM_LINE;
+            }
+            if (!strtol(ptrLines[1], (char **)NULL, 10)) {
+                return INVALID_ROOM_LINE;
+            }
+            if (read_room_data(dungeon, ptrLines[0], ptrLines[1], ptrLines[2]) == INVALID_ROOM_DATA) {
+                return INVALID_ROOM_DATA;
+            }
+        }
+        ++i;
+    }
+    return SUCCESS;
 }
 
 /**
@@ -210,7 +303,13 @@ int read_room_line(Dungeon* dungeon, FILE* fd) {
  * Post:
  */
 int load_dungeon_file(Dungeon* dungeon, FILE* fd) {
-    return ERROR;
+    int error = read_room_line(dungeon, fd);
+    if (error == INVALID_ROOM_LINE) {
+        return INVALID_ROOM_LINE;
+    } else if (error == INVALID_ROOM_DATA) {
+        return INVALID_ROOM_DATA;
+    }
+    return SUCCESS;
 }
 
 /**
@@ -224,5 +323,15 @@ int load_dungeon_file(Dungeon* dungeon, FILE* fd) {
  * Post:
  */
 int load_dungeon(Dungeon* dungeon, char* path) {
-    return ERROR;
+    FILE* file = fopen(path, "r");
+    if (file == NULL) {
+        return FILE_NOT_FOUND;
+    }
+    int error = load_dungeon_file(dungeon, file);
+    if (error == INVALID_ROOM_LINE) {
+        return INVALID_ROOM_LINE;
+    } else if (error == INVALID_ROOM_DATA) {
+        return INVALID_ROOM_DATA;
+    }
+    return SUCCESS;
 }

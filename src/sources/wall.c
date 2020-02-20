@@ -170,7 +170,6 @@ int has_exit_door(Wall *wall) {
  */
 void add_exit_door(Wall *wall) {
     wall->is_exit = TRUE;
-
 }
 
 /**
