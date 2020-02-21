@@ -11,8 +11,8 @@
  *
  * @param wall The wall to be initialized.
  *
- * Pre:
- * Post:
+ * Pre: Com a mínim ha d'haver una paret.
+ * Post: La funció ens inicialitza la paret, dient que no hi ha cap porta i per tant tampoc està oberta ni es de sortida.
  */
 void init_wall(Wall *wall) {
     wall->has_door = FALSE;
@@ -28,8 +28,8 @@ void init_wall(Wall *wall) {
  * @param door The wall to be modified.
  * @param label The label for the wall.
  *
- * Pre:
- * Post:
+ * Pre: La funció ha de tenir una paret i una etiqueta.
+ * Post: La funció estableix l'etiqueta de la paret.
  */
 void set_wall_label(Wall *wall, const char label[MAX_STRING]) {
     strcpy(wall->label, label);
@@ -40,8 +40,8 @@ void set_wall_label(Wall *wall, const char label[MAX_STRING]) {
  * @param room The wall to be queried.
  * @return The wall label.
  *
- * Pre:
- * Post:
+ * Pre: Al menys ha d'haver una paret.
+ * Post: La funció ens retorna l'etiqueta de la paret.
  */
 char* get_wall_label(Wall *wall) {
     return wall->label;
@@ -52,8 +52,8 @@ char* get_wall_label(Wall *wall) {
  * @param wall
  * @return TRUE if the wall has a door, FALSE otherwise.
  *
- * Pre:
- * Post:
+ * Pre: Ha d'haver almenys una paret.
+ * Post: La funció ens comprova si la paret té porta, si és així ens retorna la paret amb la porta.
  */
 int has_door(Wall *wall) {
     return wall->has_door;
@@ -63,8 +63,8 @@ int has_door(Wall *wall) {
  * Adds a door to the wall.
  * @param wall
  *
- * Pre:
- * Post:
+ * Pre: Ha d'haver almenys una paret i una porta per a cada paret.
+ * Post: Afegeix portes a la paret.
  */
 void add_door(Wall *wall) {
     wall->has_door = TRUE;
@@ -74,8 +74,8 @@ void add_door(Wall *wall) {
  * Removes the door from the wall.
  * @param wall
  *
- * Pre:
- * Post:
+ * Pre: Ha d'haver al menys una paret amb una porta.
+ * Post: La funció treu la porta de la paret.
  */
 void remove_door(Wall *wall) {
     wall->has_door = FALSE;
@@ -88,8 +88,8 @@ void remove_door(Wall *wall) {
  * @param state TRUE/FALSE if the door is open/closed respectively.
  * @return If the wall has no door, NO_DOOR_ERROR code is returned. SUCCESS code is returned otherwise.
  *
- * Pre:
- * Post:
+ * Pre:  Almenys ha d'haver una paret. La paret ha de tenir una porta, ja sigui tancada o oberta.
+ * Post: La funció estableix l'estat de la porta de la paret
  */
 int set_door_open(Wall* wall, int state) {
     wall->is_open = state;
@@ -107,8 +107,8 @@ int set_door_open(Wall* wall, int state) {
  * @param wall The wall to be modified.
  * @return If the wall has no door, NO_DOOR_ERROR code is returned. SUCCESS code is returned otherwise.
  *
- * Pre:
- * Post:
+ * Pre:  Almenys ha d'haver una paret. Si la paret té alguna porta, aquesta ha d'estar oberta.
+ * Post: La funció ens mira si la porta està oberta, si n'hi ha.
  */
 int open_door(Wall* wall) {
     if (wall->has_door) {
@@ -125,8 +125,8 @@ int open_door(Wall* wall) {
  * @param wall The wall to be modified.
  * @return If the wall has no door, NO_DOOR_ERROR code is returned. SUCCESS code is returned otherwise.
  *
- * Pre:
- * Post:
+ * Pre:  Almenys ha d'haver una paret. Si la paret té alguna porta, la porta ha d'estar tancada.
+ * Post: La funció comprova que la porta estigui tancada, si n'hi ha.
  */
 int close_door(Wall* wall) {
     if (wall->has_door) {
@@ -142,8 +142,8 @@ int close_door(Wall* wall) {
  * @param wall The wall to be checked.
  * @return TRUE if the wall has an open door, FALSE otherwise.
  *
- * Pre:
- * Post:
+ * Pre: Almenys ha d'haver una paret. La paret ha de tenir una porta i a més ha d'estar oberta.
+ * Post: Comprova si la paret té alguna porta i si està oberta.
  */
 int has_open_door(Wall *wall) {
     return wall->has_door && wall->is_open;
@@ -154,8 +154,8 @@ int has_open_door(Wall *wall) {
  * @param wall The wall to be checked.
  * @return TRUE if the wall has an exit door, FALSE otherwise.
  *
- * Pre:
- * Post:
+ * Pre: Almenys ha d'haver una paret. La paret ha de tenir una porta de sortida.
+ * Post: La funció comprova si la paret té alguna porta de sortida.
  */
 int has_exit_door(Wall *wall) {
         return wall->has_door && wall->is_exit;
@@ -165,8 +165,8 @@ int has_exit_door(Wall *wall) {
  * Adds an exit door to the wall.
  * @param wall The wall to be modified.
  *
- * Pre:
- * Post:
+ * Pre: Almenys ha d'haver una paret per poder afegir-li la porta de sortida.
+ * Post: La funció ens afegeix una porta de sortida.
  */
 void add_exit_door(Wall *wall) {
     wall->is_exit = TRUE;
@@ -176,8 +176,8 @@ void add_exit_door(Wall *wall) {
  * Removes the exit door from the wall.
  * @param wall The wall to be modified.
  *
- * Pre:
- * Post:
+ * Pre: Almenys ha d'haver una paret i ha de tenir alguna porta de sortida.
+ * Post: Ens elimina la porta de sortida de la paret.
  */
 void remove_exit_door(Wall *wall) {
     wall->is_exit = FALSE;

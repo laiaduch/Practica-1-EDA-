@@ -12,8 +12,8 @@
  *
  * @param room The room to be initialized.
  *
- * Pre:
- * Post:
+ * Pre: Ha d'haver una habitació.
+ * Post: La funció ens inicialitza l'habitació. Ens marca com a que no ha estat visitada i que no està disponible, a més, ens inicialitza les parets(Nord, Sud, Est, Oest)
  */
 void init_room(Room *room) {
     strcpy(room->label, "");
@@ -29,8 +29,8 @@ void init_room(Room *room) {
  *
  * @param room The room to be modified.
  *
- * Pre:
- * Post:
+  * Pre: Ha d'haver una habitació disponible.
+ * Post: La funció ens diu que aquella habitació està disponible.
  */
 void enable_room(Room* room) {
     room->is_enabled = TRUE;
@@ -41,8 +41,8 @@ void enable_room(Room* room) {
  *
  * @param room The room to be modified.
  *
- * Pre:
- * Post:
+ * Pre: Ha d'haver una habitació.
+ * Post: La funció marca que aquella habitació no està disponible.
  */
 void disable_room(Room* room) {
     room->is_enabled = FALSE;
@@ -53,8 +53,8 @@ void disable_room(Room* room) {
  * @param room The room to be checked.
  * @return TRUE if the room is enabled, FALSE otherwise.
  *
- * Pre:
- * Post:
+ * Pre: Com a mínim ha de tenir una habitació.
+ * Post:La funció comprova si l'habitació està disponible o no.
  */
 int is_enabled(Room* room){
     return room->is_enabled;
@@ -65,8 +65,8 @@ int is_enabled(Room* room){
  *
  * @param room The room to be modified.
  *
- * Pre:
- * Post:
+ * Pre: Ha d'haver almenys una habitació que es pugui visitar.
+ * Post: La funció ens marca com visitada aquella habitació.
  */
 void mark_visited(Room* room) {
     room->is_visited = TRUE;
@@ -77,8 +77,8 @@ void mark_visited(Room* room) {
  *
  * @param room The room to be modified.
  *
- * Pre:
- * Post:
+ * Pre:  Ha d'haver almenys una habitació que ja hagi sigut visitda.
+ * Post: La funció ens marca com a no visitada l'habitació.
  */
 void clear_visited(Room* room) {
     room->is_visited = FALSE;
@@ -90,8 +90,8 @@ void clear_visited(Room* room) {
  * @param room The room to be checked.
  * @return TRUE if the room is marked as visited, FALSE otherwise.
  *
- * Pre:
- * Post:
+ * Pre: Com a mínim hi haurà una habitació que no s'haurà visitat abans.
+ * Post: Comprova si l'habitació ha sigut marcada com a visitada.
  */
 int is_visited(Room* room) {
     return room->is_visited;
@@ -103,8 +103,8 @@ int is_visited(Room* room) {
  * @param direction The direction whhere the wall sits.
  * @return (A reference to) The wall of the room sitting in the input direction.
  *
- * Pre:
- * Post:
+ * Pre: Com a mínim hi ha una habitació i una direcció.
+ * Post: La funció en retorna la referència de la direcció de la paret de l'habitació
  */
 Wall* get_wall(Room* room, char direction) {
     if (direction == NORTH) {

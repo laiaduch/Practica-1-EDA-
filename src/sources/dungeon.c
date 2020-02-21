@@ -12,8 +12,8 @@
  * @param row The row value.
  * @param column The column value.
  *
- * Pre:
- * Post:
+ * Pre: Ha d'haver una posició de columnes i una posició de files
+ * Post: La funció estableix una valor de files i columnes en la posició de cadascuna.
  */
 void set_position(Position* position, int row, int column) {
     position->row = row;
@@ -24,8 +24,8 @@ void set_position(Position* position, int row, int column) {
  * Sets the starting position of the dungeon.
  * @param dungeon The dungeon to be set.
  *
- * Pre:
- * Post:
+ * Pre: Hem de tenir la posició d'una fila i d'una columna.
+ * Post: Estableix la posició inicial de la dungeon.
  */
 void set_starting_position(Dungeon *dungeon, int row, int column) {
     dungeon->initial_position.row = row;
@@ -38,8 +38,8 @@ void set_starting_position(Dungeon *dungeon, int row, int column) {
  * @param dungeon The dungeon to be queried.
  * @return The starting position of the dungeon.
  *
- * Pre:
- * Post:
+ * Pre: Necessitem la posició inical de la dungeon.
+ * Post: La funció ens retorna la posició inicial de la dungeon.
  */
 Position get_starting_position(Dungeon *dungeon) {
 
@@ -51,8 +51,8 @@ Position get_starting_position(Dungeon *dungeon) {
  * @param dungeon The dungeon to be queried.
  * @return The starting room of the dungeon.
  *
- * Pre:
- * Post:
+ * Pre: Necessitem almenys una sala de la dungeon.
+ * Post: La funció ens retorna la sala d'inici de la dungeon.
  */
 Room* get_starting_room(Dungeon *dungeon) {
     return &dungeon->map[dungeon->initial_position.row][dungeon->initial_position.column];
@@ -66,8 +66,8 @@ Room* get_starting_room(Dungeon *dungeon) {
  *
  * @return TRUE if the values are between 0 and ROWS for row and between 0 and COLUMN for column. If the row value is out of range, it returns INVALID_ROW code. If the column value is out of range, it returns INVALID_COLUMN code.
  *
- * Pre:
- * Post.
+ * Pre: Necessitem dues coordenades, una que correspon a les columnes i l'altra a les files.
+ * Post: Comprova si la els valors de la columna i de la fila són vàlids per la matriu de l'habitació de la dungeon. Si no ho són retornarà un error.
  */
 int is_valid_coordinates(int row, int column) {
     if (row < 0 || row > ROWS)
@@ -83,8 +83,8 @@ int is_valid_coordinates(int row, int column) {
  * @param position The position to be checked.
  * @return TRUE if the position is between 0 and ROWS and between 0 and COLUMN. If the row value is out of range, it returns INVALID_ROW code. If the column value is out of range, it returns INVALID_COLUMN code.
  *
- * Pre:
- * Post:
+ * Pre: Com a mínim ha d'haver una posició (posició de columna i posició de fila).
+ * Post: Comprova si la posició està compressa entre els valors vàlids de les posicions de les files i columnes.
  */
 int is_valid_position(Position position) {
     return is_valid_coordinates(position.row, position.column);
@@ -98,8 +98,8 @@ int is_valid_position(Position position) {
  * @param column The column position of the room.
  * @return The (reference to the) room of the dungeon corresponding to the row and column values if those are valid. NULL otherwise.
  *
- * Pre:
- * Post:
+ * Pre: Hi ha d'haver una sala de la dungeon, una columna i una fila.
+ * Post: La funció ens passa la referència si els valors corresponents de la columna i de la fila són vàlids, en cas de que no ho siguin la funicó ens retorna NULL.
  */
 Room *get_room_at(Dungeon *dungeon, int row, int column) {
     if (is_valid_coordinates(row, column)) {
@@ -116,8 +116,8 @@ Room *get_room_at(Dungeon *dungeon, int row, int column) {
  * @param position The position of the room.
  * @return The (reference to the) room of the dungeon corresponding to the position if valid. NULL otherwise.
  *
- * Pre:
- * Post:
+ * Pre: Necessitem almenys una sala de la dungeon i una posició( posició de columna i posició de fila).
+ * Post: La funció ens retorna la sala de la dungeon en la posició d'entrada, és a dir, ens retorna si la posició és vàlida, si no ho és ens retornarà NULL.
  */
 Room* get_room_at_position(Dungeon *dungeon, Position position) {
     if (is_valid_coordinates(position.row, position.column)) {
@@ -130,8 +130,8 @@ Room* get_room_at_position(Dungeon *dungeon, Position position) {
  * @param dungeon The dungeon to be initialized
  * @return SUCCESS code if the initialization was successful, ERROR code if something went wrong.
  *
- * Pre:
- * Post:
+ * Pre: Hi hem de tenir com a mínim una sala de la dungeon.
+ * Post: La funció inicialitza la dungeon, ajustant la posició inical a les coordenades (0,0) i inicialitzant cada sala a la matriu. Si s'inicia amb èxit la funció ens retorna SUCCESS.
  */
 int init_dungeon(Dungeon *dungeon) {
     for(int i = 0; i < ROWS; i++) {

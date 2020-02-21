@@ -254,8 +254,8 @@ int read_room_data(Dungeon* dungeon, int row, int column, const char* data) {
  * @param fd The opened file containing a dungeon map encoded as a text.
  * @return SUCCESS if the room data was parsed properly, INVALID_ROOM_LINE if the format of a room line is invalid or INVALID_ROOM_DATA if the room data is invalid.
  *
- * Pre:
- * Post:
+ * Pre: La funció necessita com a mínim una sala de la dungeon i un fitxer.
+ * Post: La funció ens llegeix linia per linia del fitxer .txt i intenta analitzar les dades que hi ha en cada linia del text. Ens retornara SUCCESS si l'ha analitzat bé i sinó ens retornará error.
  */
 int read_room_line(Dungeon* dungeon, FILE* fd) {
     char buff[MAX_LOADING_BUFFER];
@@ -299,8 +299,8 @@ int read_room_line(Dungeon* dungeon, FILE* fd) {
  * @param fd The opened file containing a dungeon map encoded as a text.
  * @return SUCCESS if the dungeon was loaded properly, INVALID_ROOM_LINE if the format of a room line is invalid or INVALID_ROOM_DATA if the room data is invalid.
  *
- * Pre:
- * Post:
+ * Pre: Necessita al menys una sala de la dungeon i un fitxer .txt que ens indica el mapa que tindrà la dungeon.
+ * Post: La funció en llegeix el fitxer i intenta llegir el mapa de la dungeon que conté el fitxer .txt. Si aconsegueix carregar el mapa amb èxit ens retornarà SUCCESS i si no és aixi ens retorna error.
  */
 int load_dungeon_file(Dungeon* dungeon, FILE* fd) {
     int error = read_room_line(dungeon, fd);
@@ -319,8 +319,8 @@ int load_dungeon_file(Dungeon* dungeon, FILE* fd) {
  * @param path The path to the file containing a dungeon map encoded as a text file.
  * @return SUCCESS if the dungeon was loaded properly, FILE_NOT_FOUND code if the file was not found, INVALID_ROOM_LINE if the format of a room line is invalid or INVALID_ROOM_DATA if the room data is invalid.
  *
- * Pre:
- * Post:
+ * Pre: La funció haurà de tenir al menys una sala de la dungeon i un mapa.
+ * Post: La funció obre el fitxer i intenta llegir un mapa de la dungeon. Ens retornarà SUCCESS si es carrega bé i si no ens retorna error.
  */
 int load_dungeon(Dungeon* dungeon, char* path) {
     FILE* file = fopen(path, "r");
