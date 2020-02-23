@@ -107,15 +107,17 @@ int is_visited(Room* room) {
  * Post: La funció en retorna la referència de la direcció de la paret de l'habitació
  */
 Wall* get_wall(Room* room, char direction) {
+    Wall* wallRes;
     if (direction == NORTH) {
-        return &room->walls[0];
+        wallRes = &room->walls[0];
     } else if (direction == SOUTH) {
-        return &room->walls[2];
+        wallRes = &room->walls[2];
     } else if (direction == EAST) {
-        return &room->walls[1];
+        wallRes = &room->walls[1];
     } else if (direction == WEST) {
-        return &room->walls[3];
+        wallRes = &room->walls[3];
     }
+    return wallRes;
 }
 
 void set_room_label(Room *room, const char label[MAX_STRING]) {
