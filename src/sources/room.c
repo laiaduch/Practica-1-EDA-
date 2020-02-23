@@ -117,3 +117,7 @@ Wall* get_wall(Room* room, char direction) {
         return &room->walls[3];
     }
 }
+
+void set_room_label(Room *room, const char label[MAX_STRING]) {
+    strcpy(room->label, label);
+}

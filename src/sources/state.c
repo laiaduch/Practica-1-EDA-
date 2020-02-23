@@ -18,6 +18,7 @@
 void init_state(State* state, Dungeon* dungeon) {
     state->dungeon = *dungeon;
     state->is_finished = FALSE;
+    state->location_user = get_starting_position(dungeon);
 }
 
 /**
@@ -99,7 +100,40 @@ int is_finished(State* state) {
  * Post: La funció mourà el jugador si la direcció introduïda és correcte, actualitzant així la posició actual de la sala. Aquesta funció ens comprovarà si la direcció és vàlida.
  */
 int move(State* state, char direction) {
-    return ERROR;
+    Room* actual = get_current_room(state);
+    if (!has_door(get_wall(actual, direction))) {
+        return NO_DOOR_ERROR;
+    }
+    Position current = get_current_position(state);
+    Position new = current;
+    int row = new.row;
+    int column = new.column;
+    switch (direction) {
+        case NORTH:
+            set_position(&new, --row, column);
+            break;
+        case SOUTH:
+            set_position(&new, ++row, column);
+            break;
+        case EAST:
+            set_position(&new, row, ++column);
+            break;
+        case WEST:
+            set_position(&new, row, --column);
+            break;
+    }
+    if (!is_valid_position(new)) {
+
+        return INVALID_MOVE;
+    }
+    if (get_room_at_position(&state->dungeon, new) != NULL && !get_room_at_position(&state->dungeon, new)->is_enabled) {
+        return INVALID_DIRECTION;
+    }
+    set_current_position(state, new);
+    if (get_wall(actual, direction)->is_exit) {
+        set_finished(state, TRUE);
+    }
+    return TRUE;
 }
 
 /**
@@ -116,5 +150,34 @@ int move(State* state, char direction) {
  * Post: Si el moviment introduït és vàlid, mou al jugador en la direcció oposada. També ens indicarà si en aquesta direcció el jugador pot anar sino ens retornarà error.
  */
 int go_back(State* state, char direction) {
-    return INVALID_MOVE;
+    Room* actual = get_current_room(state);
+    if (!has_door(get_wall(actual, direction))) {
+        return NO_DOOR_ERROR;
+    }
+    Position current = get_current_position(state);
+    Position new = current;
+    switch (direction) {
+        case NORTH:
+            set_position(&new, new.row, new.column++);
+            break;
+        case SOUTH:
+            set_position(&new, new.row, new.column--);
+            break;
+        case EAST:
+            set_position(&new, new.row++, new.column);
+            break;
+        case WEST:
+            set_position(&new, new.row--, new.column);
+            break;
+    }
+    if (!is_valid_position(new)) {
+
+        return INVALID_MOVE;
+    }
+    if (get_room_at_position(&state->dungeon, new) != NULL && !get_room_at_position(&state->dungeon, new)->is_enabled) {
+        return INVALID_DIRECTION;
+    }
+    set_current_position(state, new);
+
+    return TRUE;
 }

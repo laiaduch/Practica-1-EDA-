@@ -56,7 +56,11 @@ char* get_wall_label(Wall *wall) {
  * Post: La funció ens comprova si la paret té porta, si és així ens retorna la paret amb la porta.
  */
 int has_door(Wall *wall) {
-    return wall->has_door;
+    if (wall->has_door == 1) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 /**
@@ -93,7 +97,7 @@ void remove_door(Wall *wall) {
  */
 int set_door_open(Wall* wall, int state) {
     wall->is_open = state;
-    if (wall->has_door) {
+    if (has_door(wall)) {
         return wall->is_open;
     } else {
         return NO_DOOR_ERROR;
@@ -111,7 +115,7 @@ int set_door_open(Wall* wall, int state) {
  * Post: La funció ens mira si la porta està oberta, si n'hi ha.
  */
 int open_door(Wall* wall) {
-    if (wall->has_door) {
+    if (has_door(wall)) {
         wall->is_open = TRUE;
         return SUCCESS;
     } else {
@@ -129,7 +133,7 @@ int open_door(Wall* wall) {
  * Post: La funció comprova que la porta estigui tancada, si n'hi ha.
  */
 int close_door(Wall* wall) {
-    if (wall->has_door) {
+    if (has_door(wall)) {
         wall->is_open = FALSE;
         return SUCCESS;
     } else {
@@ -146,7 +150,11 @@ int close_door(Wall* wall) {
  * Post: Comprova si la paret té alguna porta i si està oberta.
  */
 int has_open_door(Wall *wall) {
-    return wall->has_door && wall->is_open;
+    if (has_door(wall) && wall->is_open == 1) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 /**
@@ -158,7 +166,11 @@ int has_open_door(Wall *wall) {
  * Post: La funció comprova si la paret té alguna porta de sortida.
  */
 int has_exit_door(Wall *wall) {
-        return wall->has_door && wall->is_exit;
+    if (has_door(wall) && wall->is_exit) {
+        return TRUE;
+    } else {
+        return FALSE;
+    }
 }
 
 /**

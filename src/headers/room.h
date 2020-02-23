@@ -33,4 +33,6 @@ int is_visited(Room* room);
 
 Wall* get_wall(Room* room, char direction);
 
+void set_room_label(Room *room, const char label[MAX_STRING]);
+
 #endif //DUNGEON_ROOM_H

@@ -184,9 +184,12 @@ void init_two_rooms_dungeon(Dungeon *dungeon) {
  */
 int read_room_data(Dungeon* dungeon, int row, int column, const char* data) {
     int i = 0;
-    while (data[i] == '\0') {
+    while (data[i] != '\n' && data[i] != '\0') {
         Room* room;
         room = get_room_at(dungeon, row, column);
+        char name[MAX_LOADING_BUFFER];
+        sprintf(name, "%d, %d", row, column);
+        set_room_label(room, name);
         switch(data[i]) {
             case 'I':
                 set_starting_position(dungeon, row, column);
@@ -243,6 +246,7 @@ int read_room_data(Dungeon* dungeon, int row, int column, const char* data) {
             default:
                 return INVALID_ROOM_DATA;
         }
+        ++i;
     }
     return SUCCESS;
 }
@@ -259,35 +263,57 @@ int read_room_data(Dungeon* dungeon, int row, int column, const char* data) {
  */
 int read_room_line(Dungeon* dungeon, FILE* fd) {
     char buff[MAX_LOADING_BUFFER];
-    init_dungeon(dungeon);
     int i = 0;
+    char* ptrFirstLine;
+    int row, col;
+    init_dungeon(dungeon);
     while (fgets(buff, MAX_ROOM_DATA, fd) != NULL) {
         if (i == 0) {
             char* delim = "x";
-            char* ptrFirstLine = strtok(buff, delim);
-            if (!strtol(ptrFirstLine[0], (char **)NULL, 10)) {
+            ptrFirstLine = strtok(buff, delim);
+            row = ptrFirstLine[0] - 48;
+            col = ptrFirstLine[2] - 48;
+            if (row < 0 || row > 9) {
                 return INVALID_ROOM_LINE;
             }
-            if (!strtol(ptrFirstLine[1], (char **)NULL, 10)) {
+            if (col < 0 || row > 9) {
                 return INVALID_ROOM_LINE;
             }
-            if (!is_valid_coordinates(ptrFirstLine[0], ptrFirstLine[1])) {
+            if (is_valid_coordinates(row, col) == INVALID_ROW || is_valid_coordinates(row, col) == INVALID_COLUMN) {
                 return INVALID_ROOM_LINE;
             }
+
         } else {
             char* delim = " ";
             char* ptrLines = strtok(buff, delim);
-            if (!strtol(ptrLines[0], (char **)NULL, 10)) {
-                return INVALID_ROOM_LINE;
+            int it = 0;
+            int x = 0, y = 0;
+            char* data = "";
+            while (ptrLines != NULL) {
+                switch (it) {
+                    case 0:
+                        x = *ptrLines - 48;
+                        break;
+                    case 1:
+                        y = *ptrLines - 48;
+                        break;
+                    case 2:
+                        data = ptrLines;
+                        break;
+                }
+                ptrLines = strtok(NULL, delim);
+                ++it;
             }
-            if (!strtol(ptrLines[1], (char **)NULL, 10)) {
-                return INVALID_ROOM_LINE;
-            }
-            if (read_room_data(dungeon, ptrLines[0], ptrLines[1], ptrLines[2]) == INVALID_ROOM_DATA) {
+            if (read_room_data(dungeon, x, y, data) == INVALID_ROOM_DATA) {
                 return INVALID_ROOM_DATA;
             }
         }
         ++i;
+    }
+    for (int i = 0; i < row; ++i) {
+        for (int j = 0; j < col; ++j) {
+            enable_room(get_room_at(dungeon, i, j));
+        }
     }
     return SUCCESS;
 }
