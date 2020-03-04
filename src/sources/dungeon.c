@@ -30,7 +30,7 @@ void set_position(Position* position, int row, int column) {
 void set_starting_position(Dungeon *dungeon, int row, int column) {
     dungeon->initial_position.row = row;
     dungeon->initial_position.column = column;
-    mark_visited(get_room_at(dungeon, row, column));
+    //mark_visited(get_room_at(dungeon, row, column));
 }
 
 /**
@@ -140,5 +140,39 @@ int init_dungeon(Dungeon *dungeon) {
         }
     }
     set_starting_position(dungeon, 0, 0);
+    return SUCCESS;
+}
+
+/**
+ * Resizes the dungeon, freeing the previously allocated rooms if needed.
+ * @param dungeon  The dungeon to be resized.
+ * @param rows The rows of the new dungeon
+ * @param columns The columns of the new dungeon.
+ * @return SUCCESS code if the initialization was successful, ERROR code if something went wrong.
+ */
+int resize_dungeon(Dungeon* dungeon, int rows, int columns) {
+    return ERROR;
+}
+
+/**
+ * Releases the memory allocated when constructing the dungeon, if any.
+ * @param dungeon The dungeon to be freed.
+ */
+void free_dungeon(Dungeon* dungeon) {
+}
+
+/**
+ * Resets the visited flag in all the rooms, clearing it.
+ * @param dungeon The dungeon to be reset.
+ * @return SUCCESS code if the reset was successful, ERROR code if something went wrong.
+ */
+int reset_visited(Dungeon* dungeon) {
+    for (int i = 0; i < ROWS; ++i) {
+        for (int j = 0; j < COLUMNS; ++j) {
+            Room *room = get_room_at(dungeon, i, j);
+            if (room == NULL) return ERROR;
+            clear_visited(room);
+        }
+    }
     return SUCCESS;
 }

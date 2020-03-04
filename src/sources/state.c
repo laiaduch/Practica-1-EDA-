@@ -4,6 +4,7 @@
 
 #include <stddef.h>
 #include "../headers/state.h"
+#include <stdlib.h>
 
 /**
  * Initializes the state, storing the dungeon in it and setting the current position to the dungeon stating position.
@@ -19,6 +20,7 @@ void init_state(State* state, Dungeon* dungeon) {
     state->dungeon = *dungeon;
     state->is_finished = FALSE;
     state->location_user = get_starting_position(dungeon);
+    state->user_path.seq = malloc(sizeof(Step) * MAX_STRING);
 }
 
 /**
@@ -108,6 +110,7 @@ int move(State* state, char direction) {
     Position new = current;
     int row = new.row;
     int column = new.column;
+    mark_visited(actual);
     switch (direction) {
         case NORTH:
             set_position(&new, --row, column);
@@ -151,33 +154,67 @@ int move(State* state, char direction) {
  */
 int go_back(State* state, char direction) {
     Room* actual = get_current_room(state);
-    if (!has_door(get_wall(actual, direction))) {
-        return NO_DOOR_ERROR;
-    }
-    Position current = get_current_position(state);
-    Position new = current;
+    char new_direction;
     switch (direction) {
         case NORTH:
-            set_position(&new, new.row, new.column++);
+            new_direction = SOUTH;
             break;
         case SOUTH:
-            set_position(&new, new.row, new.column--);
+            new_direction = NORTH;
             break;
         case EAST:
-            set_position(&new, new.row++, new.column);
+            new_direction = WEST;
             break;
         case WEST:
-            set_position(&new, new.row--, new.column);
+            new_direction = EAST;
             break;
     }
-    if (!is_valid_position(new)) {
-
-        return INVALID_MOVE;
+    if (!has_door(get_wall(actual, new_direction))) {
+        return NO_DOOR_ERROR;
     }
-    if (get_room_at_position(&state->dungeon, new) != NULL && !get_room_at_position(&state->dungeon, new)->is_enabled) {
-        return INVALID_DIRECTION;
-    }
-    set_current_position(state, new);
+    return move(state, new_direction);
+}
 
-    return TRUE;
+/**
+ * Adds the step as the first step of the path sequence.
+ *
+ * @param state The current state.
+ * @param direction The direction of the step.
+ */
+void add_as_first_step(State* state, Position position, char direction) {
+    Step step;
+    step.direction = direction;
+    step.position = position;
+    state->user_path.seq[0] = step;
+}
+
+/**
+ * Adds the step as the last step of the path sequence.
+ *
+ * @param state The current state.
+ * @param direction The direction of the step.
+ */
+void add_as_last_step(State* state, Position position, char direction) {
+    Step step;
+    step.direction = direction;
+    step.position = position;
+    state->user_path.seq[sizeof(state->user_path.seq) - 1] = step;
+}
+
+/**
+ * Deletes (freeing if needed) all the steps stored in the path of the state.
+ * @param state The state with the path to be cleare.
+ */
+void clear_path(State* state) {
+    free(state->user_path.seq);
+}
+
+/**
+ * Resets the state, clearing the state path and reverting the visited marks on the dungeon rooms.
+ *
+ * @param state The state to be reset.
+ */
+void reset(State* state) {
+    clear_path(state);
+    reset_visited(&state->dungeon);
 }

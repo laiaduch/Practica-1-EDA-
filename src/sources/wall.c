@@ -162,11 +162,11 @@ int has_open_door(Wall *wall) {
  * @param wall The wall to be checked.
  * @return TRUE if the wall has an exit door, FALSE otherwise.
  *
- * Pre: Almenys ha d'haver una paret. La paret ha de tenir una porta de sortida.
+ * Pre: Almenys ha d'haver una paret. La paret ha de tenir una porta.
  * Post: La funció comprova si la paret té alguna porta de sortida.
  */
 int has_exit_door(Wall *wall) {
-    if (has_door(wall) && wall->is_exit) {
+    if (wall->is_exit) {
         return TRUE;
     } else {
         return FALSE;

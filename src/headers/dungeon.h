@@ -34,4 +34,8 @@ int is_valid_position(Position position);
 Room *get_room_at(Dungeon *dungeon, int row, int column);
 Room *get_room_at_position(Dungeon *dungeon, Position position);
 
+int resize_dungeon(Dungeon* dungeon, int rows, int columns);
+void free_dungeon(Dungeon* dungeon);
+
+int reset_visited(Dungeon* dungeon);
 #endif //DUNGEON_H

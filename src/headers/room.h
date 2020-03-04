@@ -13,6 +13,7 @@
 #define SOUTH 'S' // 2
 #define WEST 'W' // 3
 #define QUIT 'Q'
+#define PATH 'P'
 
 typedef struct {
     Wall walls[4];
