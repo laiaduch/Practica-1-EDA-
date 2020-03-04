@@ -148,11 +148,12 @@ int check_current_room(State* state);
 int check_direction(State* state, Room* room, char direction) {
     if (has_door(get_wall(room, direction))) {
         if (has_exit_door(get_wall(room, direction))) {
+            add_as_last_step(state, state->location_user, direction);
             return TRUE;
         } else {
             move(state, direction);
             check_current_room(state);
-            add_as_last_step(state, state->location_user, direction);
+
             go_back(state, direction);
             return FALSE;
         }
@@ -177,9 +178,11 @@ int check_current_room(State* state) {
             return TRUE;
         } else if (check_direction(state, room, EAST) == TRUE) {
             return TRUE;
+        } else {
+            return FALSE;
         }
     }
-    return FALSE;
+    return TRUE;
 }
 
 /**
