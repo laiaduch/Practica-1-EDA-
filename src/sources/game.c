@@ -175,16 +175,12 @@ int check_current_room(State *state) {
     Room *room = get_room_at_position(&state->dungeon, state->location_user);
     if (!is_visited(room)) {
         if (check_direction(state, room, NORTH) == TRUE) {
-            add_as_last_step(state, state->location_user, NORTH);
             return TRUE;
         } else if (check_direction(state, room, SOUTH) == TRUE) {
-            add_as_last_step(state, state->location_user, SOUTH);
             return TRUE;
         } else if (check_direction(state, room, WEST) == TRUE) {
-            add_as_last_step(state, state->location_user, WEST);
             return TRUE;
         } else if (check_direction(state, room, EAST) == TRUE) {
-            add_as_last_step(state, state->location_user, EAST);
             return TRUE;
         } else {
             return FALSE;
