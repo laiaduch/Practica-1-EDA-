@@ -276,7 +276,7 @@ int read_room_line(Dungeon* dungeon, FILE* fd) {
             if (row < 0 || row > 9) {
                 return INVALID_ROOM_LINE;
             }
-            if (col < 0 || row > 9) {
+            if (col < 0  || row>9) {
                 return INVALID_ROOM_LINE;
             }
             if (is_valid_coordinates(row, col) == INVALID_ROW || is_valid_coordinates(row, col) == INVALID_COLUMN) {

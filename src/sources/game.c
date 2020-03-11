@@ -147,18 +147,22 @@ int check_current_room(State* state);
  */
 int check_direction(State* state, Room* room, char direction) {
     if (has_door(get_wall(room, direction))) {
-        if (has_exit_door(get_wall(room, direction))) {
+        if (has_exit_door(get_wall(room, direction)) == TRUE) {
             add_as_last_step(state, state->location_user, direction);
             return TRUE;
         } else {
             move(state, direction);
             check_current_room(state);
-
-            go_back(state, direction);
-            return FALSE;
+            if (check_current_room(state) == TRUE) {
+                add_as_last_step(state, state->location_user, direction);
+            } else {
+                go_back(state, direction);
+            }
+            return TRUE;
         }
     }
 }
+
 
 /**
  *  Checks if the current room is already visited. If it was not visited, checks each direction in order to find an exit.
@@ -167,16 +171,20 @@ int check_direction(State* state, Room* room, char direction) {
  * @param state The current state of the solving process.
  * @return TRUE if the room belongs to the path to an exit.
  */
-int check_current_room(State* state) {
+int check_current_room(State *state) {
     Room *room = get_room_at_position(&state->dungeon, state->location_user);
     if (!is_visited(room)) {
         if (check_direction(state, room, NORTH) == TRUE) {
+            add_as_last_step(state, state->location_user, NORTH);
             return TRUE;
         } else if (check_direction(state, room, SOUTH) == TRUE) {
+            add_as_last_step(state, state->location_user, SOUTH);
             return TRUE;
         } else if (check_direction(state, room, WEST) == TRUE) {
+            add_as_last_step(state, state->location_user, WEST);
             return TRUE;
         } else if (check_direction(state, room, EAST) == TRUE) {
+            add_as_last_step(state, state->location_user, EAST);
             return TRUE;
         } else {
             return FALSE;

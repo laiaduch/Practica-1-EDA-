@@ -16,7 +16,7 @@ typedef struct {
 } Position;
 
 typedef struct {
-    Room map[ROWS][COLUMNS];
+    Room** map;
     Position initial_position;
 } Dungeon;
 

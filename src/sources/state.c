@@ -198,7 +198,7 @@ void add_as_last_step(State* state, Position position, char direction) {
     Step step;
     step.direction = direction;
     step.position = position;
-    state->user_path.seq[sizeof(state->user_path.seq) - 1] = step;
+    state->user_path.seq[sizeof(state->user_path.seq)-1] = step;
 }
 
 /**

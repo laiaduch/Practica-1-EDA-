@@ -2,6 +2,8 @@
 // Created by rcarlini on 14/10/19.
 //
 #include <stdio.h>
+#include <stdlib.h>
+
 
 #include "../headers/dungeon.h"
 
@@ -42,7 +44,6 @@ void set_starting_position(Dungeon *dungeon, int row, int column) {
  * Post: La funció ens retorna la posició inicial de la dungeon.
  */
 Position get_starting_position(Dungeon *dungeon) {
-
     return dungeon->initial_position;
 }
 
@@ -55,7 +56,7 @@ Position get_starting_position(Dungeon *dungeon) {
  * Post: La funció ens retorna la sala d'inici de la dungeon.
  */
 Room* get_starting_room(Dungeon *dungeon) {
-    return &dungeon->map[dungeon->initial_position.row][dungeon->initial_position.column];
+    return  &dungeon->map[dungeon->initial_position.row][dungeon->initial_position.column];
 }
 
 /**
@@ -133,13 +134,20 @@ Room* get_room_at_position(Dungeon *dungeon, Position position) {
  * Pre: Hi hem de tenir com a mínim una sala de la dungeon.
  * Post: La funció inicialitza la dungeon, ajustant la posició inical a les coordenades (0,0) i inicialitzant cada sala a la matriu. Si s'inicia amb èxit la funció ens retorna SUCCESS.
  */
-int init_dungeon(Dungeon *dungeon) {
-    for(int i = 0; i < ROWS; i++) {
-        for (int j = 0; j < COLUMNS; j++) {
+int init_dungeon(Dungeon *dungeon) { //reservarà la mateixa quantitat de rooms que abans per reservar la memòria. Sempre s'inicialitza amb les mateixes constants
+    set_starting_position(dungeon, 0, 0);
+
+   dungeon->map =  (Room**) malloc(sizeof(Room*) * ROWS);
+   for (int r = 0; r < ROWS; ++r) {
+        dungeon->map[r] = (Room*) malloc(sizeof(Room) * COLUMNS);
+    }
+
+    for (int i = 0; i < ROWS; ++i) {
+        for (int j = 0; j < COLUMNS; ++j){
             init_room(&dungeon->map[i][j]);
         }
+
     }
-    set_starting_position(dungeon, 0, 0);
     return SUCCESS;
 }
 
@@ -150,8 +158,24 @@ int init_dungeon(Dungeon *dungeon) {
  * @param columns The columns of the new dungeon.
  * @return SUCCESS code if the initialization was successful, ERROR code if something went wrong.
  */
-int resize_dungeon(Dungeon* dungeon, int rows, int columns) {
-    return ERROR;
+int resize_dungeon(Dungeon* dungeon, int rows, int columns) { //reservar memòria per les noves dimensions. Podem fer realloc (+ difícil) o alliberant la memòria anterior i reservar de nova
+    for (int r = 0; r < ROWS; ++r) {
+        free(dungeon->map[r]);
+    }
+    free(dungeon->map);
+
+    dungeon->map = (Room**) malloc(sizeof(Room*) * rows);
+    for (int r = 0; r < rows; ++r) {
+        dungeon->map[r] = (Room*) malloc(sizeof(Room) * columns);
+    }
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j){
+            init_room(&dungeon->map[i][j]);
+        }
+
+    }
+    return SUCCESS;
 }
 
 /**
@@ -159,6 +183,7 @@ int resize_dungeon(Dungeon* dungeon, int rows, int columns) {
  * @param dungeon The dungeon to be freed.
  */
 void free_dungeon(Dungeon* dungeon) {
+    free(dungeon);
 }
 
 /**
