@@ -187,6 +187,7 @@ void add_as_first_step(State* state, Position position, char direction) {
     step.direction = direction;
     step.position = position;
     state->user_path.seq[0] = step;
+    ++state->user_path.size;
 }
 
 /**
