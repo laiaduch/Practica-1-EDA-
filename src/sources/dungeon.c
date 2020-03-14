@@ -70,10 +70,10 @@ Room* get_starting_room(Dungeon *dungeon) {
  * Pre: Necessitem dues coordenades, una que correspon a les columnes i l'altra a les files.
  * Post: Comprova si la els valors de la columna i de la fila són vàlids per la matriu de l'habitació de la dungeon. Si no ho són retornarà un error.
  */
-int is_valid_coordinates(int row, int column) {
-    if (row < 0 || row > ROWS)
+int is_valid_coordinates(Dungeon *dungeon, int row, int column) {
+    if (row < 0 || row > dungeon->rows)
         return INVALID_ROW;
-    else if (column < 0 || column > COLUMNS)
+    else if (column < 0 || column > dungeon->columns)
         return INVALID_COLUMN;
     else return TRUE;
 }
@@ -87,8 +87,8 @@ int is_valid_coordinates(int row, int column) {
  * Pre: Com a mínim ha d'haver una posició (posició de columna i posició de fila).
  * Post: Comprova si la posició està compressa entre els valors vàlids de les posicions de les files i columnes.
  */
-int is_valid_position(Position position) {
-    return is_valid_coordinates(position.row, position.column);
+int is_valid_position(Dungeon *dungeon, Position position) {
+    return is_valid_coordinates(dungeon, position.row, position.column);
 }
 
 /**
@@ -103,7 +103,7 @@ int is_valid_position(Position position) {
  * Post: La funció ens passa la referència si els valors corresponents de la columna i de la fila són vàlids, en cas de que no ho siguin la funicó ens retorna NULL.
  */
 Room *get_room_at(Dungeon *dungeon, int row, int column) {
-    if (is_valid_coordinates(row, column)) {
+    if (is_valid_coordinates(dungeon, row, column)) {
         return &dungeon->map[row][column];
     } else {
         return NULL;
@@ -121,7 +121,7 @@ Room *get_room_at(Dungeon *dungeon, int row, int column) {
  * Post: La funció ens retorna la sala de la dungeon en la posició d'entrada, és a dir, ens retorna si la posició és vàlida, si no ho és ens retornarà NULL.
  */
 Room* get_room_at_position(Dungeon *dungeon, Position position) {
-    if (is_valid_coordinates(position.row, position.column)) {
+    if (is_valid_coordinates(dungeon, position.row, position.column)) {
         return &dungeon->map[position.row][position.column];
     } else return NULL;
 }
@@ -159,10 +159,7 @@ int init_dungeon(Dungeon *dungeon) { //reservarà la mateixa quantitat de rooms 
  * @return SUCCESS code if the initialization was successful, ERROR code if something went wrong.
  */
 int resize_dungeon(Dungeon* dungeon, int rows, int columns) { //reservar memòria per les noves dimensions. Podem fer realloc (+ difícil) o alliberant la memòria anterior i reservar de nova
-    for (int r = 0; r < ROWS; ++r) {
-        free(dungeon->map[r]);
-    }
-    free(dungeon->map);
+    free_dungeon(dungeon);
 
     dungeon->map = (Room**) malloc(sizeof(Room*) * rows);
     for (int r = 0; r < rows; ++r) {
@@ -175,6 +172,8 @@ int resize_dungeon(Dungeon* dungeon, int rows, int columns) { //reservar memòri
         }
 
     }
+    dungeon->rows = rows;
+    dungeon->columns = columns;
     return SUCCESS;
 }
 
@@ -183,7 +182,10 @@ int resize_dungeon(Dungeon* dungeon, int rows, int columns) { //reservar memòri
  * @param dungeon The dungeon to be freed.
  */
 void free_dungeon(Dungeon* dungeon) {
-    free(dungeon);
+    for (int r = 0; r < ROWS; ++r) {
+        free(dungeon->map[r]);
+    }
+    free(dungeon->map);
 }
 
 /**

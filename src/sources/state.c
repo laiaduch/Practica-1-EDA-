@@ -126,7 +126,7 @@ int move(State* state, char direction) {
             set_position(&new, row, --column);
             break;
     }
-    if (!is_valid_position(new)) {
+    if (!is_valid_position(&state->dungeon, new)) {
 
         return INVALID_MOVE;
     }
