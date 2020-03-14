@@ -20,7 +20,8 @@ void init_state(State* state, Dungeon* dungeon) {
     state->dungeon = *dungeon;
     state->is_finished = FALSE;
     state->location_user = get_starting_position(dungeon);
-    state->user_path.seq = malloc(sizeof(Step) * MAX_STRING);
+    state->user_path.size = 0;
+    state->user_path.seq = malloc(sizeof(Step));
 }
 
 /**
@@ -198,7 +199,13 @@ void add_as_last_step(State* state, Position position, char direction) {
     Step step;
     step.direction = direction;
     step.position = position;
-    state->user_path.seq[sizeof(state->user_path.seq)-1] = step;
+    ++state->user_path.size;
+    if (!state->user_path.seq[0].direction) {
+        state->user_path.seq[0] = step;
+    } else {
+        state->user_path.seq = realloc(state->user_path.seq, sizeof(Step) * state->user_path.size);
+        state->user_path.seq[state->user_path.size - 1] = step;
+    }
 }
 
 /**

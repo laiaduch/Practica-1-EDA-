@@ -152,14 +152,14 @@ int check_direction(State* state, Room* room, char direction) {
             return TRUE;
         } else {
             move(state, direction);
-            check_current_room(state);
             if (check_current_room(state) == TRUE) {
                 add_as_last_step(state, state->location_user, direction);
-            } else {
-                go_back(state, direction);
+                return TRUE;
             }
-            return TRUE;
+            go_back(state, direction);
         }
+    } else {
+        return FALSE;
     }
 }
 
@@ -185,8 +185,9 @@ int check_current_room(State *state) {
         } else {
             return FALSE;
         }
+    } else {
+        return FALSE;
     }
-    return TRUE;
 }
 
 /**
@@ -200,7 +201,7 @@ void print_path(State* state) {
         printf("No steps yet\n");
     } else {
         printf("Starting from (%d, %d):", state->dungeon.initial_position.row, state->dungeon.initial_position.column);
-        for (int i = 0; i < sizeof(state->user_path.seq); ++i) {
+        for (int i = state->user_path.size - 1; i >= 0; --i) {
             printf(" %c", state->user_path.seq[i].direction);
         }
         printf("\n");

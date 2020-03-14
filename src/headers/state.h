@@ -13,6 +13,7 @@ typedef struct _step {
 
 typedef struct {
     Step* seq;
+    int size;
 } Path;
 
 typedef struct {
