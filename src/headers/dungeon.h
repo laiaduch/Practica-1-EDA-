@@ -18,6 +18,8 @@ typedef struct {
 typedef struct {
     Room** map;
     Position initial_position;
+    int rows;
+    int columns;
 } Dungeon;
 
 void set_position(Position* position, int row, int column);
@@ -28,8 +30,8 @@ Room* get_starting_room(Dungeon *dungeon);
 
 int init_dungeon(Dungeon *dungeon);
 
-int is_valid_coordinates(int row, int column);
-int is_valid_position(Position position);
+int is_valid_coordinates(Dungeon *dungeon, int row, int column);
+int is_valid_position(Dungeon *dungeon, Position position);
 
 Room *get_room_at(Dungeon *dungeon, int row, int column);
 Room *get_room_at_position(Dungeon *dungeon, Position position);

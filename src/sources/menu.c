@@ -96,6 +96,7 @@ void show_game_menu(Dungeon* dungeon) {
                 break;
 
             case OPTION_CANCEL:
+                free_dungeon(dungeon);
                 break;
 
             default:
