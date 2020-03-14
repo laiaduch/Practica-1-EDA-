@@ -200,7 +200,6 @@ void add_as_last_step(State* state, Position position, char direction) {
     step.position = position;
     state->user_path.seq[sizeof(state->user_path.seq)-1] = step;
 }
-
 /**
  * Deletes (freeing if needed) all the steps stored in the path of the state.
  * @param state The state with the path to be cleare.

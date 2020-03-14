@@ -32,7 +32,6 @@ void set_position(Position* position, int row, int column) {
 void set_starting_position(Dungeon *dungeon, int row, int column) {
     dungeon->initial_position.row = row;
     dungeon->initial_position.column = column;
-    //mark_visited(get_room_at(dungeon, row, column));
 }
 
 /**
@@ -134,7 +133,7 @@ Room* get_room_at_position(Dungeon *dungeon, Position position) {
  * Pre: Hi hem de tenir com a mínim una sala de la dungeon.
  * Post: La funció inicialitza la dungeon, ajustant la posició inical a les coordenades (0,0) i inicialitzant cada sala a la matriu. Si s'inicia amb èxit la funció ens retorna SUCCESS.
  */
-int init_dungeon(Dungeon *dungeon) { //reservarà la mateixa quantitat de rooms que abans per reservar la memòria. Sempre s'inicialitza amb les mateixes constants
+int init_dungeon(Dungeon *dungeon) { //reservar la mateixa memòria d'abans, és a dir, reserva memòria per les constants ROWS i COLUMNS
     set_starting_position(dungeon, 0, 0);
 
    dungeon->map =  (Room**) malloc(sizeof(Room*) * ROWS);
@@ -150,7 +149,6 @@ int init_dungeon(Dungeon *dungeon) { //reservarà la mateixa quantitat de rooms 
     }
     return SUCCESS;
 }
-
 /**
  * Resizes the dungeon, freeing the previously allocated rooms if needed.
  * @param dungeon  The dungeon to be resized.
@@ -172,7 +170,7 @@ int resize_dungeon(Dungeon* dungeon, int rows, int columns) { //reservar memòri
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j){
             init_room(&dungeon->map[i][j]);
-        }
+        } free_dungeon(dungeon);
 
     }
     return SUCCESS;
